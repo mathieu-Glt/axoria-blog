@@ -1,5 +1,5 @@
 "use client"
-import { useAuth } from '@/app/context/authContext/authContext'
+import { useAuth } from '@/app/context/authContext/AuthContext'
 import { logOut } from '@/lib/serverActions/session/sessionServerActions'
 import { isPrivatePage } from '@/lib/utils/middleware/isPrivatePage'
 import Image from 'next/image'

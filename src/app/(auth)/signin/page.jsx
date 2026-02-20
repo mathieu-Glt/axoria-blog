@@ -1,5 +1,6 @@
 "use client"
-import { useAuth } from '@/app/context/authContext/authContext'
+
+import { useAuth } from '@/app/context/authContext/AuthContext'
 import { login } from '@/lib/serverActions/session/sessionServerActions'
 import { useRouter } from 'next/navigation'
 import { useRef } from 'react'

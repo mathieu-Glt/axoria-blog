@@ -1,7 +1,8 @@
 import "./globals.css"
 import Footer from "@/components/Footer/Footer"
 import Navbar from "@/components/Navbar/Navbar"
-import { AuthProvider, useAuth } from "./context/authContext/authContext"
+import { AuthProvider } from "./context/authContext/AuthContext"
+
 
 export default function RootLayout({ children }) {
   return (

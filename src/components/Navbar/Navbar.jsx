@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import React from 'react'
 import NavbarDropdown from './NavbarDropdown'
-import { useAuth } from '@/app/context/authContext/authContext'
+import { useAuth } from '@/app/context/authContext/AuthContext'
 import Image from 'next/image'
 
 export default function Navbar() {
