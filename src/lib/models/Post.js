@@ -56,7 +56,6 @@ postSchema.pre("validate", async function (next) {
     }
 
     this.slug = slugCandidate;
-    console.log("Generated slug:", this.slug);
   }
   next();
 });

@@ -103,7 +103,6 @@ export async function addPost(formData) {
     const uploadUrl = `${process.env.BUNNY_STORAGE_HOST}/${process.env.BUNNY_STORAGE_ZONE}/${uniqueFileName}`;
     const publicImageUrl = `${process.env.BUNNY_CDN_PUBLIC_URL}/${uniqueFileName}`;
 
-    console.log("📤 Uploading file to:", uploadUrl);
 
     const response = await fetch(uploadUrl, {
       method: "PUT",
@@ -120,7 +119,6 @@ export async function addPost(formData) {
       );
     }
 
-    console.log("✅ File uploaded successfully:", publicImageUrl);
 
     // ===== GESTION DES TAGS =====
     if (typeof tags !== "string") {
@@ -130,7 +128,6 @@ export async function addPost(formData) {
     if (!Array.isArray(tagNamesArray)) {
       throw new AppError("Tags must be a valid array");
     }
-    console.log("tagNamesArray : ", tagNamesArray);
 
     const tagIds = await Promise.all(
       tagNamesArray.map(async (tagName) => {
@@ -168,7 +165,6 @@ export async function addPost(formData) {
 
     // marked transformation texte en format HTML
     let markdownHTMLResult = marked(markdownArticle);
-    console.log("markdownHTMLResult : ", markdownHTMLResult);
     markdownHTMLResult = DOMPurify.sanitize(markdownHTMLResult);
 
     // ===== SAUVEGARDE EN BASE DE DONNÉES =====
@@ -182,11 +178,9 @@ export async function addPost(formData) {
     });
 
     const savePost = await newPost.save();
-    console.log("Post successfully saved");
 
     return { success: true, message: "Post saved", slug: savePost.slug };
   } catch (error) {
-    console.log("Error while creating the post : ", error.message);
     if (error instanceof AppError) {
       throw error;
     }
@@ -196,7 +190,6 @@ export async function addPost(formData) {
 }
 
 export async function editPost(formData) {
-  console.log("edit post : ", { formData });
   const { id, slug, title, markdownArticle, coverImage, tags } =
     Object.fromEntries(formData);
   try {
@@ -208,7 +201,6 @@ export async function editPost(formData) {
     }
 
     const post = await getPostForEdit(id);
-    console.log("post trouvé :", post);
     if (!post) {
       throw new AppError("Post not found");
     }
@@ -346,7 +338,6 @@ export async function editPost(formData) {
       slug: savedPost.slug,
     };
   } catch (error) {
-    console.log("Error while editing the post:", error.message);
 
     if (error instanceof AppError) {
       throw error;
@@ -380,7 +371,6 @@ export async function deletePost(id) {
     //     method: "DELETE",
     //     headers: { AccessKey: process.env.BUNNY_STORAGE_API_KEY },
     //   });
-    //   console.log("response : ", response);
 
     //   if (!response.ok) {
     //     throw new AppError(
@@ -390,7 +380,6 @@ export async function deletePost(id) {
     // }
     revalidatePath(`/article/${post.slug}`);
   } catch (error) {
-    console.error(error);
     throw new Error("An error occured while deleting the post");
   }
 }

@@ -7,7 +7,6 @@ import Image from 'next/image'
 
 export default function Navbar() {
   const {isAuthenticated} = useAuth()
-  console.log("isAuthenticated ~ useAuth - Navbar : ", isAuthenticated)
 
  
 

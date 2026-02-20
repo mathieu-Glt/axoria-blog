@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useRef } from 'react'
 
 
-export default function page() {
+export default function Page() {
   const {setIsAuthenticated} = useAuth()
   const serverInfoRef = useRef()
   const submitButtonRef = useRef()
@@ -27,7 +27,6 @@ export default function page() {
           router.push("/")
         }
       } catch (error) {
-        console.log("Err during login")
         submitButtonRef.current.disabled = false
         serverInfoRef.current.textContent = error.message
 

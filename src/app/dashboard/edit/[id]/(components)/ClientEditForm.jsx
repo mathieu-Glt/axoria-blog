@@ -18,7 +18,6 @@ export default function ClientEditForm({ post }) {
     const formData = new FormData(e.target)
 
     const id = formData.get("id")
-    console.log("id ~ ClientEditForm : ", id)
     const coverImage = formData.get("coverImage")
     const title = formData.get("title")
     const markdownArticle = formData.get("markdownArticle")
@@ -64,7 +63,6 @@ export default function ClientEditForm({ post }) {
             }, 1000)
         }
     } catch (error) {
-        console.log("Error while editing the post:", error.message)
         serverValidationText.current.textContent = error.message
         submitButtonRef.current.textContent = "Submit"
         submitButtonRef.current.disabled = false
@@ -81,7 +79,6 @@ export default function ClientEditForm({ post }) {
     }
 
     function handleRemove(tagToRemove) {
-        console.log(tagToRemove)
         setTags(tags.filter(tag => tag !== tagToRemove))
     }
 

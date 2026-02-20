@@ -164,7 +164,6 @@ LIMIT 1;
       message: `The user ${userName} has been registered`,
     };
   } catch (error) {
-    console.error("Error while registering the user : ", error.message);
     /*if (error instanceof AppError) {
       throw error;
     }*/
@@ -218,14 +217,12 @@ export async function login(formData) {
       maxAge: 7 * 24 * 60 * 60,
       sameSite: "lax",
     });
-    console.log("cookieStore ~ login : ", cookieStore);
     revalidateTag("auth-session");
     return {
       success: true,
       message: "User has been connected",
     };
   } catch (error) {
-    console.error("Error while login the user:", error.message);
     return {
       success: false,
       message: error.message || "An error occurred while login the user",
@@ -236,7 +233,6 @@ export async function login(formData) {
 export async function logOut() {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("sessionId")?.value;
-  console.log("sessionId ~ logout : ", sessionId);
 
   try {
     await Session.findByIdAndDelete(sessionId);
@@ -251,7 +247,6 @@ export async function logOut() {
     revalidateTag("auth-session");
     return { success: true };
   } catch (error) {
-    console.log(error);
   }
 }
 

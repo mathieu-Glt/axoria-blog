@@ -22,11 +22,9 @@ export async function getPost(slug) {
         select: "name slug",
       });
   } catch (error) {
-    console.log("Error while fetching a post:", error);
     throw new Error("Failed to fetch post");
   }
 
-  console.log("postMethod - getPost - post:", post);
 
   if (!post) null;
 
@@ -61,7 +59,6 @@ export async function getPosts() {
       })),
     }));
   } catch (error) {
-    console.log("Error while fetch posts : ", error);
     throw new Error("Failed to fetch posts");
   }
 }
@@ -98,7 +95,6 @@ export async function getUserPostsFromUserID(userId) {
       })),
     }));
   } catch (error) {
-    console.log("Error while fetch posts from user id:", error);
     throw new Error("Failed to fetch posts");
   }
 }
@@ -122,7 +118,6 @@ export async function getPostsByTag(tagSlug) {
 
     return posts;
   } catch (error) {
-    console.log("Error while fetch posts by tag:", error);
     throw new Error("Failed to fetch posts by tag");
   }
 }
@@ -145,7 +140,6 @@ export async function getPostsByAuthor(normalizedUserName) {
       .sort({ createdAt: -1 })
       .lean(); // ✅ .lean()
   } catch (error) {
-    console.log("Error while fetch posts by author:", error);
     throw new Error("Failed to fetch posts by author");
   }
 
@@ -187,9 +181,7 @@ export async function getPostForEdit(id) {
         select: "name slug",
       })
       .lean();
-    console.log("getPostForEdit : ", post);
   } catch (error) {
-    console.log("Error while fetching post for edit:", error);
     throw new Error("Failed to fetch post for edit");
   }
 

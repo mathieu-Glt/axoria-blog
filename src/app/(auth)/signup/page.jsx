@@ -22,7 +22,6 @@ export default function Page() {
         const result = await register(new FormData(e.target))
 
         if(result.success){
-            console.log("🚀 SUCCESS! Redirecting NOW")
             submitButtonRef.current.textContent = "User created ✅"
 
             let countdown = 3;
@@ -52,7 +51,6 @@ export default function Page() {
         serverInfoRef.current.textContent = `${error.message}`
         submitButtonRef.current.disabled = false
 
-        console.error("Failed for signing user: ", error.message)
     }
   }
 

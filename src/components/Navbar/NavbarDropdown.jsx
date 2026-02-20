@@ -20,7 +20,6 @@ function NavbarDropdown({userId}) {
     }
 
     async function handleLogout() {
-        console.log("Disconnected !")
         setIsOpen(false)
         const result = await logOut()
         if(result.success) {

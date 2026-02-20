@@ -30,7 +30,6 @@ export async function GET() {
       { userId: user._id.toString() },
     );
   } catch (error) {
-    console.log("Error while validating session : ", error);
     return NextResponse.json({ authorized: false }, { status: 301 });
   }
 }

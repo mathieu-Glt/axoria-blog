@@ -19,16 +19,12 @@ export default function Page() {
         const formData = new FormData(e.target)
         // set ajouter une paire key/value  si elle n'existe pas ds le formData
         formData.set("tags", JSON.stringify(tags))
-        console.log('FormData : ', formData)
         
-        console.log("=== FormData Entries ===")
         for(const [key, value] of formData.entries()){
-            console.log(`${key}:`, value)
         }
         
         // Ou convertir en objet pour mieux voir
         const data = Object.fromEntries(formData)
-        console.log("FormData as Object:", data)
         serverValidationText.current.textContent = ""
         submitButtonRef.current.textContent = "Saving Post ..."
         submitButtonRef.current.disabled = true
@@ -72,7 +68,6 @@ export default function Page() {
     }
 
     function handleRemove(tagToRemove) {
-        console.log(tagToRemove)
         setTags(tags.filter(tag => tag !== tagToRemove))
     }
 
@@ -153,7 +148,7 @@ export default function Page() {
             
             />
             <label htmlFor="coverImage" className='f-label'>Cover file (Image: 1280x720 max or PDF: 5MB max)</label>
-            <input type="file" name="coverImage" id="coverImage" required placeholder="Article's cover image" className='shadow cursor-pointer border rounded w-full p-3 text-gray-700 mb-2 focus:outline-none focus:shadow-outline'     required
+            <input type="file" name="coverImage" id="coverImage" required placeholder="Article's cover image" className='shadow cursor-pointer border rounded w-full p-3 text-gray-700 mb-2 focus:outline-none focus:shadow-outline'
                 onChange={handleFileChange}/>
             <p className='text-red-700 mb-7' ref={imgUploadValidationText}></p>
             <div className='mb-10'>
