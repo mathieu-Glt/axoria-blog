@@ -101,8 +101,7 @@ export async function addPost(formData) {
 
     const uniqueFileName = `${crypto.randomUUID()}_${coverImage.name.trim()}`;
     const uploadUrl = `${process.env.BUNNY_STORAGE_HOST}/${process.env.BUNNY_STORAGE_ZONE}/${uniqueFileName}`;
-    const publicImageUrl = `${process.env.BUNNY_CDN_PUBLIC_URL}/${uniqueFileName}`;
-
+    const publicImageUrl = `${process.env.NEXT_PUBLIC_BUNNY_CDN_PUBLIC_URL}/${uniqueFileName}`;
 
     const response = await fetch(uploadUrl, {
       method: "PUT",
@@ -118,7 +117,6 @@ export async function addPost(formData) {
         `Error while uploading the image : ${response.statusText}`,
       );
     }
-
 
     // ===== GESTION DES TAGS =====
     if (typeof tags !== "string") {
@@ -280,7 +278,7 @@ export async function editPost(formData) {
 
       const uniqueFileName = `${crypto.randomUUID()}_${coverImage.name.trim()}`;
       const uploadUrl = `${process.env.BUNNY_STORAGE_HOST}/${process.env.BUNNY_STORAGE_ZONE}/${uniqueFileName}`;
-      const publicImageUrl = `${process.env.BUNNY_CDN_PUBLIC_URL}/${uniqueFileName}`;
+      const publicImageUrl = `${process.env.NEXT_PUBLIC_BUNNY_CDN_PUBLIC_URL}/${uniqueFileName}`;
 
       const response = await fetch(uploadUrl, {
         method: "PUT",
@@ -338,7 +336,6 @@ export async function editPost(formData) {
       slug: savedPost.slug,
     };
   } catch (error) {
-
     if (error instanceof AppError) {
       throw error;
     }
