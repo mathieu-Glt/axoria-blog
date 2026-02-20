@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "axoriablogeducationmatpz.b-cdn.net",
+        hostname: "https://axoriablogeducationMatPZ.b-cdn.net",
         pathname: "/**",
       },
     ],
