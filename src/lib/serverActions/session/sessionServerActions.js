@@ -96,13 +96,13 @@ Le ! inverse le résultat (on veut détecter les emails invalides)
 
 Si l'une de ces conditions est vraie → une erreur est levée
 Exemples
-✅ Valides :
+Valides :
 
 user@example.com
 jean.dupont@domaine.fr
 test123@site.org
 
-❌ Invalides :
+Invalides :
 
 user@example (pas de point après le domaine)
 @example.com (pas de nom d'utilisateur)
@@ -182,13 +182,13 @@ export async function login(formData) {
     const user = await User.findOne({ email: email });
 
     if (!user) {
-      return { success: false, message: "Invalid credentials" }; // ⚠️ RETURN, pas throw
+      return { success: false, message: "Invalid credentials" };
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return { success: false, message: "Invalid credentials" }; // ⚠️ RETURN, pas throw
+      return { success: false, message: "Invalid credentials" };
     }
 
     let session;
@@ -246,8 +246,7 @@ export async function logOut() {
     });
     revalidateTag("auth-session");
     return { success: true };
-  } catch (error) {
-  }
+  } catch (error) {}
 }
 
 export async function SAsessionInfo() {

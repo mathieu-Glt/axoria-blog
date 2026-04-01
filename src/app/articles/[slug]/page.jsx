@@ -61,7 +61,7 @@ export default async function page({params}) {
             href={`/categories/author/${post.author.normalizedUserName}`} 
             className="underline hover:text-gray-900"
         >
-            {post.author.userName}  {/* ✅ Utilisez userName */}
+            {post.author.userName} 
         </Link>
     </span>
     <span>•</span>

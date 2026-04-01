@@ -12,7 +12,7 @@
 // Tu l'ajoutes quand ton composant utilise des choses qui n'existent que dans le navigateur.
 // js"use client";
 
-// // ✅ Ces hooks nécessitent le client
+// // Ces hooks nécessitent le client
 // import { useState, useEffect } from "react";
 
 // export default function Counter() {
@@ -35,7 +35,7 @@
 // Tu l'ajoutes sur des fonctions de mutation (create, update, delete) appelées depuis un Client Component ou un <form>.
 // js"use server";
 
-// // ✅ Le client peut appeler cette fonction
+// // Le client peut appeler cette fonction
 // // sans que la logique serveur soit exposée
 // export async function createPost(formData) {
 //   await connectToDB();

@@ -59,7 +59,7 @@ export async function addPost(formData) {
       throw new AppError("Authentication required");
     }
 
-    // ===== VALIDATION DU FICHIER =====
+    // VALIDATION DU FICHIER
     if (!coverImage || !(coverImage instanceof File)) {
       throw new AppError("Invalid data");
     }
@@ -84,7 +84,7 @@ export async function addPost(formData) {
 
     const fileBuffer = Buffer.from(await coverImage.arrayBuffer());
 
-    // ===== VALIDATION DES DIMENSIONS (IMAGES UNIQUEMENT) =====
+    // VALIDATION DES DIMENSIONS (IMAGES UNIQUEMENT)
     if (validImageTypes.includes(coverImage.type)) {
       const { width, height } = await sharp(fileBuffer).metadata();
       if (width > 1280 || height > 720) {
@@ -92,11 +92,10 @@ export async function addPost(formData) {
       }
     }
 
-    // ===== UPLOAD CLOUDINARY ✅ =====
+    // UPLOAD CLOUDINARY
     const uniqueFileName = `${crypto.randomUUID()}_${coverImage.name.trim()}`;
     const publicImageUrl = await uploadToCloudinary(fileBuffer, uniqueFileName);
 
-    // ===== GESTION DES TAGS =====
     if (typeof tags !== "string") {
       throw new AppError("Invalid data");
     }
@@ -119,7 +118,7 @@ export async function addPost(formData) {
       }),
     );
 
-    // ===== GESTION DU MARKDOWN =====
+    // GESTION DU MARKDOWN
     marked.use(
       markedHighlight({
         highlight: (code, language) => {
@@ -138,7 +137,6 @@ export async function addPost(formData) {
     let markdownHTMLResult = marked(markdownArticle);
     markdownHTMLResult = DOMPurify.sanitize(markdownHTMLResult);
 
-    // ===== SAUVEGARDE =====
     const newPost = new Post({
       title,
       markdownArticle,
@@ -176,7 +174,6 @@ export async function editPost(formData) {
 
     const updatedPost = {};
 
-    // ===== TITLE =====
     if (typeof title !== "string" || title.trim().length < 3) {
       throw new AppError("Invalid title");
     }
@@ -185,7 +182,6 @@ export async function editPost(formData) {
       updatedPost.title = title.trim();
     }
 
-    // ===== MARKDOWN =====
     if (
       typeof markdownArticle !== "string" ||
       markdownArticle.trim().length < 3
@@ -216,7 +212,6 @@ export async function editPost(formData) {
       );
     }
 
-    // ===== FILE OPTIONNEL =====
     if (coverImage && coverImage instanceof File && coverImage.size > 0) {
       const validImageTypes = [
         "image/jpeg",
@@ -245,7 +240,7 @@ export async function editPost(formData) {
         }
       }
 
-      // ===== UPLOAD CLOUDINARY ✅ =====
+      // UPLOAD CLOUDINARY
       const uniqueFileName = `${crypto.randomUUID()}_${coverImage.name.trim()}`;
       updatedPost.coverImageUrl = await uploadToCloudinary(
         fileBuffer,
@@ -253,7 +248,6 @@ export async function editPost(formData) {
       );
     }
 
-    // ===== TAGS =====
     if (typeof tags === "string") {
       const tagNamesArray = JSON.parse(tags);
 
@@ -269,17 +263,15 @@ export async function editPost(formData) {
       }
     }
 
-    // ===== NOTHING CHANGED =====
     if (Object.keys(updatedPost).length === 0) {
       throw new AppError("No changes detected");
     }
 
-    // ===== SAVE =====
+    // SAVE
     const savedPost = await Post.findByIdAndUpdate(post._id, updatedPost, {
       new: true,
     });
 
-    // ===== REVALIDATE =====
     revalidatePath(`/articles/${post.slug}`);
     if (updatedPost.slug) {
       revalidatePath(`/articles/${updatedPost.slug}`);

@@ -17,13 +17,13 @@ export default function Page() {
         
         //FormData objet javascript qui permet de stocker les valeurs d'un formulaire key/value pour envoi methode fetc post
         const formData = new FormData(e.target)
-        // set ajouter une paire key/value  si elle n'existe pas ds le formData
+        // set ajout d'une paire key/value  si elle n'existe pas ds le formData
         formData.set("tags", JSON.stringify(tags))
         
         for(const [key, value] of formData.entries()){
         }
         
-        // Ou convertir en objet pour mieux voir
+        // Object conversion en objet
         const data = Object.fromEntries(formData)
         serverValidationText.current.textContent = ""
         submitButtonRef.current.textContent = "Saving Post ..."

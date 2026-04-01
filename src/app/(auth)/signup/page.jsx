@@ -25,7 +25,6 @@ export default function Page() {
             submitButtonRef.current.textContent = "User created ✅"
 
             let countdown = 3;
-            // ✅ Ajout de .current
             serverInfoRef.current.classList.remove("hidden")
             serverInfoRef.current.textContent = `Redirecting in ${countdown}...`
 
@@ -39,7 +38,7 @@ export default function Page() {
                 }
             }, 1000)
         } else {
-            // ✅ Gestion du cas success: false
+            // Gestion du cas success: false
             submitButtonRef.current.textContent = "Submit"
             submitButtonRef.current.disabled = false
             serverInfoRef.current.classList.remove("hidden")

@@ -14,7 +14,6 @@ export default async function Home() {
             <p className="t-main-subtitle">Tech news and useful knowledge</p>
             <ul className="u-articles-grid">
                 {posts.map((post, id) => {
-                    // Vérifier si c'est un PDF
                     return <PostCard key={post._id} post={post} />
                 })}
             </ul>

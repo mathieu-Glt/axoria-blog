@@ -6,8 +6,8 @@ export async function uploadToCloudinary(fileBuffer, fileName) {
       .upload_stream(
         {
           folder: "axoria",
-          public_id: fileName, // nom du fichier sans extension
-          resource_type: "auto", // gère images + PDF
+          public_id: fileName,
+          resource_type: "auto",
         },
         (error, result) => {
           if (error) reject(error);

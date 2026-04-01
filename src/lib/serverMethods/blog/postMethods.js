@@ -25,7 +25,6 @@ export async function getPost(slug) {
     throw new Error("Failed to fetch post");
   }
 
-
   if (!post) null;
 
   return post;
@@ -44,8 +43,8 @@ export async function getPosts() {
         select: "name slug",
       })
       .sort({ createdAt: -1 })
-      .lean(); // ✅ Ajoutez .lean();
-    // ✅ Convertir tous les ObjectId en strings
+      .lean();
+    // Convertir tous les ObjectId en strings
     return posts.map((post) => ({
       ...post,
       _id: post._id.toString(),
@@ -79,9 +78,9 @@ export async function getUserPostsFromUserID(userId) {
         select: "name slug",
       })
       .sort({ createdAt: -1 })
-      .lean(); // ✅ Convertit en objets plain JavaScript
+      .lean(); // Convertit en objets plain JavaScript
 
-    // ✅ Convertir les ObjectId en strings
+    // Convertir les ObjectId en strings
     return posts.map((post) => ({
       ...post,
       _id: post._id.toString(),
@@ -129,7 +128,7 @@ export async function getPostsByAuthor(normalizedUserName) {
   let posts;
 
   try {
-    author = await User.findOne({ normalizedUserName }).lean(); // ✅ .lean()
+    author = await User.findOne({ normalizedUserName }).lean();
 
     posts = await Post.find({ author: author?._id })
       .populate({
@@ -138,14 +137,14 @@ export async function getPostsByAuthor(normalizedUserName) {
       })
       .select("title coverImageUrl slug createdAt")
       .sort({ createdAt: -1 })
-      .lean(); // ✅ .lean()
+      .lean();
   } catch (error) {
     throw new Error("Failed to fetch posts by author");
   }
 
   if (!author) notFound();
 
-  // ✅ Convertir les ObjectId en strings
+  // Convertir les ObjectId en strings
   return {
     author: {
       ...author,

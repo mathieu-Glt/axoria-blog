@@ -36,14 +36,14 @@ export default function ClientEditForm({ post }) {
     }
 
     formData.set("tags", JSON.stringify(tags))
-    // ✅ Ajout du slug manquant
+    // Ajout du slug manquant
     formData.set("slug", post.slug)
 
     serverValidationText.current.textContent = ""
     submitButtonRef.current.textContent = "Updating Post ..."
     submitButtonRef.current.disabled = true
 
-    // ✅ editPost dans le try/catch
+    // EditPost dans le try/catch
     try {
         const result = await editPost(formData)
 

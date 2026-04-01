@@ -38,7 +38,6 @@ const postSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Middleware AVANT la sauvegarde
 postSchema.pre("validate", async function (next) {
   if (!this.slug && this.title) {
     let slugCandidate = slugify(this.title, { lower: true, strict: true });
