@@ -12,6 +12,8 @@ export function AuthProvider({ children }) {
     userId: null,
   });
 
+  console.log("session user : ", isAuthenticated)
+
   useEffect(() => {
     async function fetchSession() {
       const session = await SAsessionInfo();

@@ -31,6 +31,7 @@ import { revalidatePath } from "next/cache";
 import { getPostForEdit } from "@/lib/serverMethods/blog/postMethods";
 import areTagSimilar, { generateUniqueSlug } from "@/lib/utils/general/utils";
 import { findOrCreateTag } from "@/lib/serverMethods/tag/tagMethods";
+import { uploadToCloudinary } from "@/lib/utils/upload/uploadToCloudinary";
 
 const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
@@ -40,12 +41,10 @@ export async function addPost(formData) {
     Object.fromEntries(formData);
 
   try {
-    // Validation du titre
     if (typeof title !== "string" || title.trim().length < 3) {
       throw new AppError("Invalid data");
     }
 
-    // Validation du contenu markdown
     if (
       typeof markdownArticle !== "string" ||
       markdownArticle.trim().length < 3
@@ -64,7 +63,7 @@ export async function addPost(formData) {
     if (!coverImage || !(coverImage instanceof File)) {
       throw new AppError("Invalid data");
     }
-    // Types de fichiers acceptés
+
     const validImageTypes = [
       "image/jpeg",
       "image/jpg",
@@ -72,21 +71,17 @@ export async function addPost(formData) {
       "image/webp",
     ];
     const validPdfType = "application/pdf";
-    //Copie de toutes les valeurs de validImageTypes en utilisant le spread operator ...validImageTypes
     const allValidTypes = [...validImageTypes, validPdfType];
 
-    // Validation du type de fichier
     if (!allValidTypes.includes(coverImage.type)) {
       throw new AppError("Invalid file type");
     }
 
-    // Validation de la taille (5 MB max)
     const maxSize = 5 * 1024 * 1024;
     if (coverImage.size > maxSize) {
       throw new AppError("File too large. Maximum size is 5MB");
     }
 
-    // Conversion du fichier en buffer
     const fileBuffer = Buffer.from(await coverImage.arrayBuffer());
 
     // ===== VALIDATION DES DIMENSIONS (IMAGES UNIQUEMENT) =====
@@ -97,26 +92,9 @@ export async function addPost(formData) {
       }
     }
 
-    // Pour les PDF, aucune validation supplémentaire
-
+    // ===== UPLOAD CLOUDINARY ✅ =====
     const uniqueFileName = `${crypto.randomUUID()}_${coverImage.name.trim()}`;
-    const uploadUrl = `${process.env.BUNNY_STORAGE_HOST}/${process.env.BUNNY_STORAGE_ZONE}/${uniqueFileName}`;
-    const publicImageUrl = `${process.env.NEXT_PUBLIC_BUNNY_CDN_PUBLIC_URL}/${uniqueFileName}`;
-
-    const response = await fetch(uploadUrl, {
-      method: "PUT",
-      headers: {
-        AccessKey: process.env.BUNNY_STORAGE_API_KEY,
-        "Content-type": "application/octet-stream",
-      },
-      body: fileBuffer,
-    });
-
-    if (!response.ok) {
-      throw new AppError(
-        `Error while uploading the image : ${response.statusText}`,
-      );
-    }
+    const publicImageUrl = await uploadToCloudinary(fileBuffer, uniqueFileName);
 
     // ===== GESTION DES TAGS =====
     if (typeof tags !== "string") {
@@ -130,9 +108,7 @@ export async function addPost(formData) {
     const tagIds = await Promise.all(
       tagNamesArray.map(async (tagName) => {
         const normalizedTagName = tagName.trim().toLowerCase();
-
         let tag = await Tag.findOne({ name: normalizedTagName });
-
         if (!tag) {
           tag = await Tag.create({
             name: normalizedTagName,
@@ -147,11 +123,9 @@ export async function addPost(formData) {
     marked.use(
       markedHighlight({
         highlight: (code, language) => {
-          // Correction : Prism.languages au lieu de Prism.language
           const validLanguage = Prism.languages[language]
             ? language
             : "plaintext";
-
           return Prism.highlight(
             code,
             Prism.languages[validLanguage],
@@ -161,11 +135,10 @@ export async function addPost(formData) {
       }),
     );
 
-    // marked transformation texte en format HTML
     let markdownHTMLResult = marked(markdownArticle);
     markdownHTMLResult = DOMPurify.sanitize(markdownHTMLResult);
 
-    // ===== SAUVEGARDE EN BASE DE DONNÉES =====
+    // ===== SAUVEGARDE =====
     const newPost = new Post({
       title,
       markdownArticle,
@@ -179,10 +152,7 @@ export async function addPost(formData) {
 
     return { success: true, message: "Post saved", slug: savePost.slug };
   } catch (error) {
-    if (error instanceof AppError) {
-      throw error;
-    }
-
+    if (error instanceof AppError) throw error;
     throw new Error("An error occured while creating the post");
   }
 }
@@ -190,6 +160,7 @@ export async function addPost(formData) {
 export async function editPost(formData) {
   const { id, slug, title, markdownArticle, coverImage, tags } =
     Object.fromEntries(formData);
+
   try {
     await connectToDB();
 
@@ -225,14 +196,12 @@ export async function editPost(formData) {
     if (markdownArticle.trim() !== post.markdownArticle) {
       updatedPost.markdownArticle = markdownArticle;
 
-      // ✅ Correction : markedHighlight ajouté comme dans addPost
       marked.use(
         markedHighlight({
           highlight: (code, language) => {
             const validLanguage = Prism.languages[language]
               ? language
               : "plaintext";
-
             return Prism.highlight(
               code,
               Prism.languages[validLanguage],
@@ -247,7 +216,7 @@ export async function editPost(formData) {
       );
     }
 
-    // ===== FILE (OPTIONAL) =====
+    // ===== FILE OPTIONNEL =====
     if (coverImage && coverImage instanceof File && coverImage.size > 0) {
       const validImageTypes = [
         "image/jpeg",
@@ -276,24 +245,12 @@ export async function editPost(formData) {
         }
       }
 
+      // ===== UPLOAD CLOUDINARY ✅ =====
       const uniqueFileName = `${crypto.randomUUID()}_${coverImage.name.trim()}`;
-      const uploadUrl = `${process.env.BUNNY_STORAGE_HOST}/${process.env.BUNNY_STORAGE_ZONE}/${uniqueFileName}`;
-      const publicImageUrl = `${process.env.NEXT_PUBLIC_BUNNY_CDN_PUBLIC_URL}/${uniqueFileName}`;
-
-      const response = await fetch(uploadUrl, {
-        method: "PUT",
-        headers: {
-          AccessKey: process.env.BUNNY_STORAGE_API_KEY,
-          "Content-type": "application/octet-stream",
-        },
-        body: fileBuffer,
-      });
-
-      if (!response.ok) {
-        throw new AppError("Error uploading file");
-      }
-
-      updatedPost.coverImageUrl = publicImageUrl;
+      updatedPost.coverImageUrl = await uploadToCloudinary(
+        fileBuffer,
+        uniqueFileName,
+      );
     }
 
     // ===== TAGS =====
@@ -304,12 +261,10 @@ export async function editPost(formData) {
         throw new AppError("Tags must be an array");
       }
 
-      // ✅ Correction : on compare avec post.tags (source DB) au lieu de postToEdit.tags
       if (!areTagSimilar(tagNamesArray, post.tags)) {
         const tagIds = await Promise.all(
           tagNamesArray.map((tag) => findOrCreateTag(tag)),
         );
-
         updatedPost.tags = tagIds;
       }
     }
@@ -336,10 +291,7 @@ export async function editPost(formData) {
       slug: savedPost.slug,
     };
   } catch (error) {
-    if (error instanceof AppError) {
-      throw error;
-    }
-
+    if (error instanceof AppError) throw error;
     throw new Error("An error occurred while editing the post");
   }
 }
