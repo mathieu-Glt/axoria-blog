@@ -130,7 +130,7 @@ export default function ClientEditForm({ post }) {
                 e.target.value = ""
             } else {
                 imgUploadValidationText.current.textContent = 
-                    `✅ Image valid (${img.width}x${img.height})`
+                    `Image valid (${img.width}x${img.height})`
             }
             URL.revokeObjectURL(img.src)
         })
@@ -140,7 +140,7 @@ export default function ClientEditForm({ post }) {
         // Message de confirmation pour PDF
         const sizeMB = (file.size / (1024 * 1024)).toFixed(2)
         imgUploadValidationText.current.textContent = 
-            `✅ PDF valid (${sizeMB}MB)`
+            `PDF valid (${sizeMB}MB)`
     }
 }
 

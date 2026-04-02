@@ -43,10 +43,9 @@ if(!userId || userId === "null"){
               {/*On doit sérializer l'objet en JSON avec l'utilisation de toString() Un composant next doit recevoir post._id          // ObjectId('64f1a2b3c4d5e6f7a8b9c0d1')  ← objet Mongoose
                   post._id.toString() // "64f1a2b3c4d5e6f7a8b9c0d1"          ← string classique
                   // Parce que Next.js ne peut pas sérialiser un objet ObjectId pour le passer en props à un Client Component :
-                    js// ❌ Plante — ObjectId n'est pas sérialisable
+                    js// Plante — ObjectId n'est pas sérialisable
                     return <MonComposant id={post._id} />
 
-                  // ✅ Ok — string classique
                   return <MonComposant id={post._id.toString()} /> */}
                   <DeletePostButton id={post._id.toString()}/>
                 

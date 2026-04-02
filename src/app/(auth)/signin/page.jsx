@@ -1,5 +1,15 @@
 "use client"
 
+/**
+ * Tu la places en haut d'un fichier pour dire à Next.js que ce composant s'exécute dans le navigateur.
+À utiliser quand tu as besoin de :
+
+useState, useEffect, useReducer, etc.
+des événements (onClick, onChange…)
+accès au DOM / window / localStorage
+des libs qui nécessitent le browser
+ */
+
 import { useAuth } from '@/app/context/authContext/AuthContext'
 import { login } from '@/lib/serverActions/session/sessionServerActions'
 import { useRouter } from 'next/navigation'

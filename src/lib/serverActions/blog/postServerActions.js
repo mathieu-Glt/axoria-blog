@@ -1,6 +1,16 @@
 "use server";
 
 /**
+ * 
+ * Tu la places en haut d'un fichier (ou d'une fonction) pour définir des Server Actions — des fonctions qui s'exécutent exclusivement côté serveur, mais qu'on peut appeler depuis le client.
+À utiliser quand tu as besoin de :
+
+accéder à la base de données directement
+manipuler des fichiers / secrets / variables d'env
+effectuer des mutations depuis un formulaire ou un bouton
+
+
+
  * Utilisation de use server zeulment depuis un composant client qui fait une requete fetch ou un form
  * Ce fichier est déjà un Server-side module
 Ce fichier contient des Server Actions / fonctions serveur, mais il y a une nuance importante :

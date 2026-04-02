@@ -1,4 +1,14 @@
 "use client" // Ne pas déclare de composant en async quand il est notifié comme Client avec "use client"
+
+/**
+ * Tu la places en haut d'un fichier pour dire à Next.js que ce composant s'exécute dans le navigateur.
+À utiliser quand tu as besoin de :
+
+useState, useEffect, useReducer, etc.
+des événements (onClick, onChange…)
+accès au DOM / window / localStorage
+des libs qui nécessitent le browser
+ */
 import React, { useRef, useState } from 'react'
 import { addPost } from '@/lib/serverActions/blog/postServerActions'
 import { useRouter } from 'next/navigation'
@@ -119,7 +129,7 @@ export default function Page() {
                 e.target.value = ""
             } else {
                 imgUploadValidationText.current.textContent = 
-                    `✅ Image valid (${img.width}x${img.height})`
+                    `Image valid (${img.width}x${img.height})`
             }
             URL.revokeObjectURL(img.src)
         })
@@ -129,7 +139,7 @@ export default function Page() {
         // Message de confirmation pour PDF
         const sizeMB = (file.size / (1024 * 1024)).toFixed(2)
         imgUploadValidationText.current.textContent = 
-            `✅ PDF valid (${sizeMB}MB)`
+            `PDF valid (${sizeMB}MB)`
     }
 }
 
